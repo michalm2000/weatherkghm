@@ -11,7 +11,6 @@ public class RESTServiceW {
     @GetMapping("/weather/{cityName}")
     public Object getCurrentWeather(@PathVariable String cityName) throws CityNotFoundException {
         Object returnData = WeatherDataProvider.getCurrentWeatherInfo(cityName);
-        System.out.println("tururu" + returnData);
         if (returnData == null) {
             throw new CityNotFoundException();
         }

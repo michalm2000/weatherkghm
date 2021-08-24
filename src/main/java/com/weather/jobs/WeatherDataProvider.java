@@ -30,14 +30,13 @@ public class WeatherDataProvider {
     private void getWeatherInfo(){
         HashMap<String, Object> weatherInfo = new HashMap<>();
         for (String cityName: cityList){
-            WeatherDataProvider.weatherInfo.put(
+            weatherInfo.put(
                     cityName, restTemplate.getForObject(URI + cityName.replace('_', ' ')
                     +"&appid=" + APP_ID, Object.class));
         }
-        WeatherDataProvider.weatherInfo = weatherInfo;
     }
 
     public static Object getCurrentWeatherInfo(String cityName){
-        return weatherInfo.getOrDefault(cityName, "hehehehehehehehe");
+        return weatherInfo.get(cityName);
     }
 }

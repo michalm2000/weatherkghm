@@ -1,6 +1,7 @@
 package com.weather.service;
 
 import com.weather.jobs.WeatherDataProvider;
+import com.weather.model.WeatherResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 public class RESTServiceW {
 
     @GetMapping("/weather/{cityName}")
-    public Object getCurrentWeather(@PathVariable String cityName) throws CityNotFoundException {
-        Object returnData = WeatherDataProvider.getCurrentWeatherInfo(cityName);
+    public WeatherResponse getCurrentWeather(@PathVariable String cityName) throws CityNotFoundException {
+        WeatherResponse returnData = WeatherDataProvider.getCurrentWeatherInfo(cityName);
         if (returnData == null) {
             throw new CityNotFoundException();
         }

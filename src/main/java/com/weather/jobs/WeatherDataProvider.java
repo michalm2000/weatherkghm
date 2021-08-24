@@ -28,7 +28,6 @@ public class WeatherDataProvider {
 
     @Scheduled(fixedDelay = 120000, initialDelay = 0)
     private void getWeatherInfo(){
-        HashMap<String, Object> weatherInfo = new HashMap<>();
         for (String cityName: cityList){
             weatherInfo.put(
                     cityName, restTemplate.getForObject(URI + cityName.replace('_', ' ')

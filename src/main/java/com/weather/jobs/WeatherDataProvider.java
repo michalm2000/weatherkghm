@@ -1,6 +1,6 @@
 package com.weather.jobs;
 
-import com.weather.model.WeatherResponse;
+import com.weather.model.CurrentWeatherResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,17 +33,16 @@ public class WeatherDataProvider {
     @Value("${iconcode.list}")
     private String[] iconCodes;
 
-    private HashMap<String, String> icons;
+    private final HashMap<String, String> icons;
 
-    private static HashMap<String, WeatherResponse> weatherInfo;
+    private static HashMap<String, CurrentWeatherResponse> weatherInfo;
     private final RestTemplate restTemplate;
 
 
-    public WeatherDataProvider() throws IOException {
+    public WeatherDataProvider() {
         weatherInfo = new HashMap<>();
         icons = new HashMap<>();
         restTemplate = new RestTemplate();
-        downloadIconURIs();
     }
     @SuppressWarnings("rawtypes")
     private String extractWeatherIcon(HashMap response) {
@@ -58,18 +57,19 @@ public class WeatherDataProvider {
     }
 
     private String getDataURIFromIconCode(String iconCode) throws IOException {
+        System.out.println(imageURI + iconCode + imageURITail);
         byte[] imageBytes = IOUtils.toByteArray(new URL(imageURI + iconCode + imageURITail));
         return Base64.getEncoder().encodeToString(imageBytes);
     }
 
     @SuppressWarnings("rawtypes")
-    @Scheduled(fixedDelay = 240000, initialDelay = 0)
+    @Scheduled(fixedDelay = 240000, initialDelay = 100)
     private void downloadCurrentWeatherInfo(){
         for (String cityName: cityList){
             HashMap response = restTemplate.getForObject(URI + cityName.replace('_', ' ')
                     +"&appid=" + APP_ID, HashMap.class);
             try {
-                WeatherResponse wr = new WeatherResponse();
+                CurrentWeatherResponse wr = new CurrentWeatherResponse();
                 wr.setIconB64(icons.get(extractWeatherIcon(response)));
                 wr.setTemp(extractTemp(response));
                 weatherInfo.put(cityName, wr);
@@ -78,14 +78,16 @@ public class WeatherDataProvider {
             }
         }
     }
-
+    @Scheduled(fixedDelay = 86400000, initialDelay = 0)
     private void downloadIconURIs() throws IOException {
-        for (String iconCode: iconCodes) {
-            icons.put(iconCode, getDataURIFromIconCode(iconCode));
+        if (icons.isEmpty()){
+            for (String iconCode : iconCodes) {
+                icons.put(iconCode, getDataURIFromIconCode(iconCode));
+            }
         }
     }
 
-    public static WeatherResponse getCurrentWeatherInfo(String cityName){
+    public static CurrentWeatherResponse getCurrentWeatherInfo(String cityName){
         return weatherInfo.get(cityName);
     }
 }

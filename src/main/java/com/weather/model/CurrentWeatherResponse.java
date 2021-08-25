@@ -1,6 +1,6 @@
 package com.weather.model;
 
-public class WeatherResponse {
+public class CurrentWeatherResponse {
     String iconB64;
     String temp;
 

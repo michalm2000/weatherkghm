@@ -8,7 +8,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 @Component
@@ -36,7 +38,24 @@ public class ForecastDataProvider extends WeatherDataProvider {
     @SuppressWarnings("rawtype")
     protected String[] extractTemp(HashMap daily) {
         HashMap map = (HashMap) daily.get("temp");
-        return new String[]{map.get("max").toString(), map.get("min").toString()} ;//extracting max and min temp to array
+        long max, min;
+        try {
+            max = Math.round((double) map.get("max"));
+        } catch (ClassCastException e){
+            max = (int) map.get("max");
+        }
+        try {
+            min = Math.round((double) map.get("min"));
+        } catch (ClassCastException e){
+            min = (int) map.get("min");
+        }
+        return new String[]{String.valueOf(max),
+                String.valueOf(min)} ;//extracting max and min temp to array
+    }
+
+    private String extractDate(int timestamp){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(new Date(timestamp*1000L));
     }
     @SuppressWarnings("rawtype")
     private ArrayList<DailyResponse> makeDailyResponse(HashMap response) throws IOException {
@@ -44,11 +63,13 @@ public class ForecastDataProvider extends WeatherDataProvider {
         ArrayList<HashMap> dailyList = (ArrayList) response.get("daily");
         for (HashMap daily: dailyList) {
             String[] temp = extractTemp(daily);
+            System.out.println((int) daily.get("dt"));
             dailyResponseArrayList.add(new DailyResponse(IconConverter.getDataURIFromIconCode(extractWeatherIcon(daily)),
-                    temp[0], temp[1], daily.get("dt").toString()));
+                    temp[0] + " °C", temp[1] + " °C", extractDate((int) daily.get("dt"))));
         }
         return dailyResponseArrayList;
     }
+
 
     @Scheduled(fixedDelay = 240000, initialDelay = 200)
     private void downloadWeatherInfo(){

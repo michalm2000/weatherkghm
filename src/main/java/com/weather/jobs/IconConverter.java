@@ -28,10 +28,11 @@ public class IconConverter {
     public IconConverter(){
         icons = new HashMap<>();
     }
+
     private String convertIconCodeToDataURI(String iconCode) throws IOException {
         System.out.println(imageURI + iconCode + imageURITail);
         byte[] imageBytes = IOUtils.toByteArray(new URL(imageURI + iconCode + imageURITail));
-        return Base64.getEncoder().encodeToString(imageBytes);
+        return "data:image/png;base64,"+ Base64.getEncoder().encodeToString(imageBytes);
     }
 
     @Scheduled(fixedDelay = 86400000, initialDelay = 0)

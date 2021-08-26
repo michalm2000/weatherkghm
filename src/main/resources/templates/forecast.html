@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Forecast</title>
+</head>
+<body>
+<table style="border: 4px black ">
+    <tbody>
+    <tr>
+        <td th:each="weather: ${dailyWeather}"><table>
+        <tr><td align="center" valign="center" th:text="${weather.getDate()}"></td></tr>
+        <tr><td align="center" valign="center" ><img th:attr="src=@{${weather.getIconB64()}}" alt="icon"></td></tr>
+        <tr><td align="center" valign="center" th:text="${weather.getMax()}"></td></tr>
+        <tr><td align="center" valign="center" th:text="${weather.getMin()}"></td></tr>
+        </table>
+        </td>
+    </tr>
+
+
+    </tbody>
+</table>
+</body>
+</html>

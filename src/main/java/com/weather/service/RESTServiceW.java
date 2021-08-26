@@ -13,7 +13,8 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping
 public class RESTServiceW {
-
+    
+    //get current weather
     @GetMapping("/weather/{cityName}")
     public WeatherResponse getCurrentWeather(@PathVariable String cityName) throws CityNotFoundException {
         WeatherResponse returnData = (WeatherResponse) CurrentWeatherDataProvider.getWeatherInfo(cityName);
@@ -22,7 +23,7 @@ public class RESTServiceW {
         }
         return returnData;
     }
-
+    //get weather forecast
     @GetMapping("/forecast/{cityName}")
     public Object getForecast(@PathVariable String cityName) throws CityNotFoundException {
         RestTemplate restTemplate = new RestTemplate();

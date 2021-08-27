@@ -30,7 +30,6 @@ public class IconConverter {
     }
 
     private String convertIconCodeToDataURI(String iconCode) throws IOException {
-        System.out.println(imageURI + iconCode + imageURITail);
         byte[] imageBytes = IOUtils.toByteArray(new URL(imageURI + iconCode + imageURITail));
         return "data:image/png;base64,"+ Base64.getEncoder().encodeToString(imageBytes);
     }

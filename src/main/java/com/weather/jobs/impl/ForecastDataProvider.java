@@ -54,7 +54,7 @@ public class ForecastDataProvider extends WeatherDataProvider {
     }
 
     private String extractDate(int timestamp){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd.MM");
         return dateFormat.format(new Date(timestamp*1000L));
     }
     @SuppressWarnings("rawtype")
@@ -63,7 +63,6 @@ public class ForecastDataProvider extends WeatherDataProvider {
         ArrayList<HashMap> dailyList = (ArrayList) response.get("daily");
         for (HashMap daily: dailyList) {
             String[] temp = extractTemp(daily);
-            System.out.println((int) daily.get("dt"));
             dailyResponseArrayList.add(new DailyResponse(IconConverter.getDataURIFromIconCode(extractWeatherIcon(daily)),
                     temp[0] + " °C", temp[1] + " °C", extractDate((int) daily.get("dt"))));
         }

@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.springframework.util.StringUtils.capitalize;
 
 @Controller
 
@@ -45,9 +49,15 @@ public class RESTServiceW {
         if (returnData == null) {
             throw new CityNotFoundException();
         }
-        model.addAttribute("cityName", cityName);
+        model.addAttribute("cityName", convertToUppercase(cityName));
         model.addAttribute("dailyWeather",returnData);
         return "forecast";
+    }
+
+    private String convertToUppercase(String string){
+        Matcher m = Pattern.compile("\\b(\\w)(\\w*)_(\\w(?:_\\w)*)").matcher(string);
+        return capitalize(m.replaceAll(r -> r.group(1).toUpperCase() +r.group(2) + "_" + r.group(3).toUpperCase())
+                .replace('_', ' '));
     }
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "No available data for this city")

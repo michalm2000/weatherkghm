@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 @Component
@@ -40,7 +39,6 @@ public class CurrentWeatherDataProvider extends WeatherDataProvider {
     @SuppressWarnings("rawtypes")
     private String[] extractCoordinates(HashMap response){
         HashMap map = (HashMap) response.get("coord");
-        System.out.println(Arrays.toString(new String[]{map.get("lon").toString(), map.get("lat").toString()}));
         return new String[]{map.get("lon").toString(), map.get("lat").toString()};
     }
 
